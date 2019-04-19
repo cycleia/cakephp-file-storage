@@ -86,7 +86,7 @@ abstract class AbstractStorageEventListener implements EventListenerInterface {
 	 * @param array $config
 	 */
 	public function __construct(array $config = []) {
-		$this->getConfig($config);
+		$this->setConfig($config);
 	}
 
 	/**

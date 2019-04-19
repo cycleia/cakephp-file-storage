@@ -48,7 +48,7 @@ class BasePathBuilder implements PathBuilderInterface {
 			['_defaultConfig'],
 			['associative' => ['_defaultConfig']]
 		);
-		$this->getConfig($config);
+		$this->setConfig($config);
 	}
 
 	/**
