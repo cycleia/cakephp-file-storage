@@ -70,8 +70,8 @@ class UploadValidatorBehavior extends Behavior {
 	 */
 	public function configureUploadValidation($validatorName = 'default', $config = []) {
 		$uploadValidator = new \Burzum\FileStorage\Validation\UploadValidator();
-		$validator = $this->_table->validator($validatorName);
-		$validator->provider('UploadValidator', $uploadValidator);
+		$validator = $this->_table->getValidator($validatorName);
+		$validator->setProvider('UploadValidator', $uploadValidator);
 
 		$config = $this->_config += $config;
 		$this->removeUploadValidationRules($validatorName);
@@ -150,7 +150,7 @@ class UploadValidatorBehavior extends Behavior {
 		if (empty($fieldName)) {
 			$fieldName = $this->_config['fileField'];
 		}
-		$validator = $this->_table->validator($validatorName);
+		$validator = $this->_table->getValidator($validatorName);
 		$rules = [
 			'localFile',
 			'extension',
