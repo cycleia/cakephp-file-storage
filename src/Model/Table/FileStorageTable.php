@@ -54,10 +54,10 @@ class FileStorageTable extends Table {
 	 */
 	public function initialize(array $config) {
 		parent::initialize($config);
-		$this->primaryKey('id');
+		$this->setPrimaryKey('id');
 		$this->addBehavior('Timestamp');
-		$this->displayField('filename');
-		$this->table('file_storage');
+		$this->setDisplayField('filename');
+		$this->setTable('file_storage');
 	}
 
 	/**
