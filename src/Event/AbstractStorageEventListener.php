@@ -162,7 +162,7 @@ abstract class AbstractStorageEventListener implements EventListenerInterface {
 		}
 		return (
 			$this->_checkTable($event)
-			&& (bool)$this->getAdapterClassName($event->data['record']['adapter'])
+			&& (bool)$this->getAdapterClassName($event->getData('record.adapter'))
 			&& $this->_modelFilter($event)
 		);
 	}
@@ -175,7 +175,7 @@ abstract class AbstractStorageEventListener implements EventListenerInterface {
 	 */
 	protected function _modelFilter(Event $event) {
 		if (is_array($this->_config['models'])) {
-			$model = $event->data['record']['model'];
+			$model = $event->getData('record.model');
 			if (!in_array($model, $this->_config['models'])) {
 				return false;
 			}
@@ -190,7 +190,7 @@ abstract class AbstractStorageEventListener implements EventListenerInterface {
 	 * @return boolean
 	 */
 	protected function _checkTable(Event $event) {
-		return ($event->subject() instanceOf $this->storageTableClass);
+		return ($event->getSubject() instanceOf $this->storageTableClass);
 	}
 
 	/**

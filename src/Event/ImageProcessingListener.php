@@ -272,11 +272,11 @@ class ImageProcessingListener extends AbstractStorageEventListener {
 	 */
 	public function afterSave(Event $Event) {
 		if ($this->_checkEvent($Event)) {
-			$table = $Event->subject();
+			$table = $Event->getSubject();
 			$record = $Event->getData('record');
 			$Storage = StorageManager::getAdapter($record->get('adapter'));
 			try {
-				$id = $record->{$table->primaryKey()};
+				$id = $record->{$table->getPrimaryKey()};
 				$filename = $this->stripDashes($id);
 				$file = $record['file'];
 				$record['path'] = $this->fsPath('images' . DS . $record['model'], $id);
