@@ -127,7 +127,6 @@ class ImageHelper extends StorageHelper {
 	 * @return string
 	 */
 	public function normalizePath($path) {
-		\App\Lib\GlobalUtil::log($path);
 		return str_replace('\\', '/', $path);
 	}
 }
