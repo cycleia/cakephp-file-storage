@@ -78,7 +78,7 @@ class FileStorageTable extends Table {
 	 * @param \ArrayAccess $data
 	 * @return void
 	 */
-	public function beforeMarshal(Event $event, ArrayAccess $data) {
+	public function beforeMarshal(EventInterface $event, ArrayAccess $data) {
 		$this->getFileInfoFromUpload($data);
 	}
 
@@ -90,7 +90,7 @@ class FileStorageTable extends Table {
 	 * @param array $options
 	 * @return boolean true on success
 	 */
-	public function beforeSave(Event $event, EntityInterface $entity, $options) {
+	public function beforeSave(EventInterface $event, EntityInterface $entity, $options) {
 		$this->_checkEntityBeforeSave($entity);
 		$Event = $this->dispatchEvent('FileStorage.beforeSave', array(
 			'record' => $entity,
@@ -151,7 +151,7 @@ class FileStorageTable extends Table {
 	 * @param array $options
 	 * @return boolean
 	 */
-	public function afterSave(Event $event, EntityInterface $entity, $options) {
+	public function afterSave(EventInterface $event, EntityInterface $entity, $options) {
 		$this->dispatchEvent('FileStorage.afterSave', [
 			'record' => $entity,
 			'created' => $event->data['entity']->isNew(),
@@ -168,7 +168,7 @@ class FileStorageTable extends Table {
 	 * @param \Cake\Datasource\EntityInterface $entity
 	 * @return boolean
 	 */
-	public function beforeDelete(Event $event, EntityInterface $entity) {
+	public function beforeDelete(EventInterface $event, EntityInterface $entity) {
 		$this->record = $this->find()
 			->contain([])
 			->where([
@@ -191,7 +191,7 @@ class FileStorageTable extends Table {
 	 * @param array $options
 	 * @return boolean
 	 */
-	public function afterDelete(Event $event, EntityInterface $entity, $options) {
+	public function afterDelete(EventInterface $event, EntityInterface $entity, $options) {
 		$event = $this->dispatchEvent('FileStorage.afterDelete', [
 			'record' => $entity,
 			'storage' => $this->storageAdapter($entity['adapter'])

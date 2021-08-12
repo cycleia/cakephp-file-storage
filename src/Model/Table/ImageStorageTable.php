@@ -54,7 +54,7 @@ class ImageStorageTable extends FileStorageTable {
 	 * @param array $options
 	 * @return boolean true on success
 	 */
-	public function beforeSave(Event $event, EntityInterface $entity, $options) {
+	public function beforeSave(EventInterface $event, EntityInterface $entity, $options) {
 		if (!parent::beforeSave($event, $entity, $options)) {
 			return false;
 		}
@@ -77,7 +77,7 @@ class ImageStorageTable extends FileStorageTable {
 	 * @param array $options
 	 * @return boolean
 	 */
-	public function afterSave(Event $event, EntityInterface $entity, $options) {
+	public function afterSave(EventInterface $event, EntityInterface $entity, $options) {
 		if ($entity->isNew()) {
 			$this->dispatchEvent('ImageStorage.afterSave', [
 				'record' => $entity,
@@ -95,7 +95,7 @@ class ImageStorageTable extends FileStorageTable {
 	 * @param \Cake\Datasource\EntityInterface $entity
 	 * @return boolean
 	 */
-	public function beforeDelete(Event $event, EntityInterface $entity) {
+	public function beforeDelete(EventInterface $event, EntityInterface $entity) {
 		if (!parent::beforeDelete($event, $entity)) {
 			return false;
 		}
@@ -122,7 +122,7 @@ class ImageStorageTable extends FileStorageTable {
 	 * @param array $options
 	 * @return boolean
 	 */
-	public function afterDelete(Event $event, EntityInterface $entity, $options) {
+	public function afterDelete(EventInterface $event, EntityInterface $entity, $options) {
 		$this->dispatchEvent('ImageStorage.afterDelete', [
 			'record' => $entity,
 			'storage' => $this->storageAdapter($entity->get('adapter'))
