@@ -91,9 +91,9 @@ class ImageHelper extends StorageHelper {
 		EventManager::instance()->dispatch($event2);
 
 		if ($event1->isStopped()) {
-			return $this->normalizePath($event1->getData('path'));
+			return $this->normalizePath($event1->getResult());
 		} elseif ($event2->isStopped()) {
-			return $this->normalizePath($event2->getData('path'));
+			return $this->normalizePath($event2->getResult());
 		}
 
 		return false;
@@ -127,6 +127,7 @@ class ImageHelper extends StorageHelper {
 	 * @return string
 	 */
 	public function normalizePath($path) {
+		\App\Lib\GlobalUtil::log($path);
 		return str_replace('\\', '/', $path);
 	}
 }
