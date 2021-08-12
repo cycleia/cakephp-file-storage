@@ -57,7 +57,7 @@ class ImageProcessingListener extends AbstractStorageEventListener {
 	 *
 	 * @return array
 	 */
-	public function implementedEvents() {
+	public function implementedEvents(): array {
 		return array(
 			'ImageVersion.createVersion' => 'createVersions',
 			'ImageVersion.removeVersion' => 'removeVersions',
@@ -156,7 +156,7 @@ class ImageProcessingListener extends AbstractStorageEventListener {
 	 * @param Event $Event
 	 * @return void
 	 */
-	public function createVersions(Event $Event) {
+	public function createVersions(EventInterface $Event) {
 		if ($this->_checkEvent($Event)) {
 			$table = $Event->subject();
 			$record = $Event->getData('record');
@@ -170,7 +170,7 @@ class ImageProcessingListener extends AbstractStorageEventListener {
 	 *
 	 * @param Event $Event
 	 */
-	public function removeVersions(Event $Event) {
+	public function removeVersions(EventInterface $Event) {
 		$this->_removeVersions($Event);
 	}
 
@@ -180,7 +180,7 @@ class ImageProcessingListener extends AbstractStorageEventListener {
 	 * @param Event $Event
 	 * @return void
 	 */
-	protected function _removeVersions(Event $Event) {
+	protected function _removeVersions(EventInterface $Event) {
 		if ($this->_checkEvent($Event)) {
 			$Storage = $Event->getData('storage');
 			$record = $Event->getData('record');
@@ -208,7 +208,7 @@ class ImageProcessingListener extends AbstractStorageEventListener {
 	 * @param Event $Event
 	 * @return boolean|null
 	 */
-	public function afterDelete(Event $Event) {
+	public function afterDelete(EventInterface $Event) {
 		if ($this->_checkEvent($Event)) {
 			$record = $Event->getData('record');
 			$string = $this->_buildPath($record, true, null);
@@ -250,7 +250,7 @@ class ImageProcessingListener extends AbstractStorageEventListener {
 	 * @param Event $Event
 	 * @return void
 	 */
-	public function beforeSave(Event $Event) {
+	public function beforeSave(EventInterface $Event) {
 		if ($this->_checkEvent($Event)) {
 			$record = $Event->getData('record');
 			if (empty($record['model'])) {
@@ -270,7 +270,7 @@ class ImageProcessingListener extends AbstractStorageEventListener {
 	 * @param Event $Event
 	 * @return void
 	 */
-	public function afterSave(Event $Event) {
+	public function afterSave(EventInterface $Event) {
 		if ($this->_checkEvent($Event)) {
 			$table = $Event->getSubject();
 			$record = $Event->getData('record');
@@ -316,7 +316,7 @@ class ImageProcessingListener extends AbstractStorageEventListener {
 	 * @throws RuntimeException
 	 * @return void
 	 */
-	public function imagePath(Event $Event) {
+	public function imagePath(EventInterface $Event) {
 		$data = $Event->getData();
 		extract($data);
 		// \Cake\Log\Log::debug(var_export($data, true));
@@ -341,7 +341,7 @@ class ImageProcessingListener extends AbstractStorageEventListener {
 	 * @param Event $Event
 	 * @return void
 	 */
-	protected function _buildLocalPath(Event $Event) {
+	protected function _buildLocalPath(EventInterface $Event) {
 		$data = $Event->getData();
 		extract($data);
 		$path = $this->_buildPath($image, true, $hash);
@@ -368,7 +368,7 @@ class ImageProcessingListener extends AbstractStorageEventListener {
 	 * @param Event $Event
 	 * @return void
 	 */
-	protected function _buildAmazonS3Path(Event $Event) {
+	protected function _buildAmazonS3Path(EventInterface $Event) {
 		$data = $Event->getData();
 		extract($data);
 

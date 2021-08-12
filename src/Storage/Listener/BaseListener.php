@@ -54,7 +54,7 @@ class BaseListener extends AbstractListener {
 	 *
 	 * @return array
 	 */
-	public function implementedEvents() {
+	public function implementedEvents(): array {
 		return array_merge(parent::implementedEvents(), [
 			'FileStorage.afterSave' => 'afterSave',
 			'FileStorage.afterDelete' => 'afterDelete',
@@ -77,7 +77,7 @@ class BaseListener extends AbstractListener {
 	 * @param \Cake\Datasource\EntityInterface $entity
 	 * @return void
 	 */
-	public function afterDelete(Event $event, EntityInterface $entity) {
+	public function afterDelete(EventInterface $event, EntityInterface $entity) {
 		if ($this->_checkEvent($event)) {
 			$event->result = $this->_deleteFile($event);;
 			$event->stopPropagation();
@@ -91,7 +91,7 @@ class BaseListener extends AbstractListener {
 	 * @param \Cake\Datasource\EntityInterface $entity
 	 * @return void
 	 */
-	public function afterSave(Event $event, EntityInterface $entity) {
+	public function afterSave(EventInterface $event, EntityInterface $entity) {
 		if ($this->_checkEvent($event) && $entity->isNew()) {
 			$fileField = $this->config('fileField');
 
@@ -174,7 +174,7 @@ class BaseListener extends AbstractListener {
 	 * @param string $method
 	 * return void
 	 */
-	protected function _processImages(Event $event, $method) {
+	protected function _processImages(EventInterface $event, $method) {
 		if ($this->getConfig('imageProcessing') !== true) {
 			return;
 		}

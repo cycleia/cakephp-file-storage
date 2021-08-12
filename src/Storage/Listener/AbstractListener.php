@@ -122,7 +122,7 @@ abstract class AbstractListener implements EventListenerInterface {
 	 *
 	 * @return array
 	 */
-	public function implementedEvents() {
+	public function implementedEvents(): array {
 		return [
 			'FileStorage.path' => 'getPath'
 		];
@@ -402,7 +402,7 @@ abstract class AbstractListener implements EventListenerInterface {
 	 * @param \Cake\Event\Event
 	 * @return void
 	 */
-	protected function _handleLegacyEvent(Event &$event) {
+	protected function _handleLegacyEvent(EventInterface &$event) {
 		if (method_exists($event, 'setData')) {
 			$data = $event->getData();
 			if (isset($data['record'])) {

@@ -27,7 +27,7 @@ class S3StorageListener extends AbstractStorageEventListener {
  *
  * @return array
  */
-	public function implementedEvents() {
+	public function implementedEvents(): array {
 		return array(
 			'FileStorage.afterSave' => 'afterSave',
 			'FileStorage.afterDelete' => 'afterDelete',
@@ -40,7 +40,7 @@ class S3StorageListener extends AbstractStorageEventListener {
  * @param \Cake\Event\Event $Event
  * @return boolean|null
  */
-	public function afterDelete(Event $Event) {
+	public function afterDelete(EventInterface $Event) {
 		if ($this->_checkEvent($Event)) {
 			$table = $Event->subject();
 			$record = $Event->data['record'][$table->alias()];
@@ -69,7 +69,7 @@ class S3StorageListener extends AbstractStorageEventListener {
  * @param Event $Event
  * @return void
  */
-	public function afterSave(Event $Event) {
+	public function afterSave(EventInterface $Event) {
 		if ($this->_checkEvent($Event)) {
 			$table = $Event->subject();
 			$record = $Event->data['record'];

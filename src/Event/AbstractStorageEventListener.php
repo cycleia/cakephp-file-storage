@@ -104,7 +104,7 @@ abstract class AbstractStorageEventListener implements EventListenerInterface {
 	 *
 	 * @return array
 	 */
-	abstract public function implementedEvents();
+	abstract public function implementedEvents(): array;
 
 	/**
 	 * Builds the filename of under which the data gets saved in the storage adapter.

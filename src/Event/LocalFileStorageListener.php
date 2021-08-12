@@ -35,7 +35,7 @@ class LocalFileStorageListener extends AbstractStorageEventListener {
 	 *
 	 * @return array
 	 */
-	public function implementedEvents() {
+	public function implementedEvents(): array {
 		return [
 			'FileStorage.afterSave' => [
 				'callable' => 'afterSave',
