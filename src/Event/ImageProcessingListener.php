@@ -3,7 +3,7 @@ namespace Burzum\FileStorage\Event;
 
 use Burzum\Imagine\Lib\ImageProcessor;
 use Burzum\Imagine\Lib\ImagineUtility;
-use Cake\Event\Event;
+use Cake\Event\EventInterface;
 use Cake\Core\Configure;
 use Cake\ORM\Table;
 use Burzum\FileStorage\Storage\StorageManager;

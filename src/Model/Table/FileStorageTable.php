@@ -5,7 +5,7 @@ use ArrayAccess;
 use Burzum\FileStorage\Storage\PathBuilder\PathBuilderTrait;
 use Burzum\FileStorage\Storage\StorageTrait;
 use Cake\Datasource\EntityInterface;
-use Cake\Event\Event;
+use Cake\Event\EventInterface;
 use Cake\Filesystem\File;
 use Cake\Log\LogTrait;
 use Cake\ORM\Table;
@@ -52,7 +52,7 @@ class FileStorageTable extends Table {
 	 * @param array $config
 	 * @return void
 	 */
-	public function initialize(array $config) {
+	public function initialize(array $config): void {
 		parent::initialize($config);
 		$this->setPrimaryKey('id');
 		$this->addBehavior('Timestamp');

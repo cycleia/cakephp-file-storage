@@ -2,7 +2,7 @@
 namespace Burzum\FileStorage\Model\Behavior;
 
 use Cake\Core\Configure;
-use Cake\Event\Event;
+use Cake\Event\EventInterface;
 use Cake\Event\EventManager;
 use Cake\ORM\Table;
 use Cake\ORM\Behavior;

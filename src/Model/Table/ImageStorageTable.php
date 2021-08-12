@@ -7,7 +7,7 @@ use Burzum\FileStorage\Storage\PathBuilder\PathBuilderTrait;
 use Cake\Log\LogTrait;
 use Cake\Core\Configure;
 use Cake\Datasource\EntityInterface;
-use Cake\Event\Event;
+use Cake\Event\EventInterface;
 use Cake\Validation\Validation;
 
 /**
@@ -34,7 +34,7 @@ class ImageStorageTable extends FileStorageTable {
 	 * @param array $config
 	 * @return void
 	 */
-	public function initialize(array $config) {
+	public function initialize(array $config): void {
 		parent::initialize($config);
 		$this->addBehavior('Burzum/Imagine.Imagine');
 		$this->addBehavior('Burzum/FileStorage.UploadValidator', array(

@@ -12,7 +12,7 @@ use Burzum\FileStorage\Storage\StorageTrait;
 use Burzum\FileStorage\Storage\StorageUtils;
 use Cake\Core\InstanceConfigTrait;
 use Cake\Datasource\EntityInterface;
-use Cake\Event\Event;
+use Cake\Event\EventInterface;
 use Cake\Event\EventListenerInterface;
 use Cake\Event\EventManager;
 use Cake\Filesystem\Folder;
@@ -136,7 +136,7 @@ abstract class AbstractListener implements EventListenerInterface {
 	 * @return bool
 	 * @throws \Burzum\FileStorage\Storage\StorageException
 	 */
-	protected function _checkEvent(Event $event) {
+	protected function _checkEvent(EventInterface $event) {
 		$className = $this->_getAdapterClassFromConfig($event->data['record']['adapter']);
 		$classes = $this->_adapterClasses;
 		if (!empty($classes) && !in_array($className, $this->_adapterClasses)) {
@@ -156,7 +156,7 @@ abstract class AbstractListener implements EventListenerInterface {
 	 * @param Event $event
 	 * @return boolean
 	 */
-	protected function _modelFilter(Event $event) {
+	protected function _modelFilter(EventInterface $event) {
 		if (is_array($this->_config['models'])) {
 			$model = $event->data['record']['model'];
 			if (!in_array($model, $this->_config['models'])) {
@@ -293,7 +293,7 @@ abstract class AbstractListener implements EventListenerInterface {
 	 * @param \Cake\Event\Event $event
 	 * @return string
 	 */
-	public function getPath(Event $event) {
+	public function getPath(EventInterface $event) {
 		return $this->pathBuilder()->{$event->data['method']}($event->subject(), $event->data);
 	}
 
@@ -304,7 +304,7 @@ abstract class AbstractListener implements EventListenerInterface {
 	 * @return bool
 	 * @throws \Burzum\FileStorage\Storage\StorageException
 	 */
-	protected function _storeFile(Event $event) {
+	protected function _storeFile(EventInterface $event) {
 		try {
 			$this->_handleLegacyEvent($event);
 			$fileField = $this->config('fileField');
@@ -331,7 +331,7 @@ abstract class AbstractListener implements EventListenerInterface {
 	 * @return bool
 	 * @throws \Burzum\FileStorage\Storage\StorageException
 	 */
-	protected function _deleteFile(Event $event) {
+	protected function _deleteFile(EventInterface $event) {
 		try {
 			$this->_handleLegacyEvent($event);
 			$entity = $event->data['entity'];
@@ -369,7 +369,7 @@ abstract class AbstractListener implements EventListenerInterface {
 	 * @param \Cake\Event\Event $event;
 	 * @return void
 	 */
-	protected function _afterStoreFile(Event $event) {
+	protected function _afterStoreFile(EventInterface $event) {
 		$this->_handleLegacyEvent($event);
 		$afterStoreEvent = new Event('FileStorage.afterStoreFile', $this, [
 			'entity' => $event->result,
@@ -385,7 +385,7 @@ abstract class AbstractListener implements EventListenerInterface {
 	 * @param \Cake\Event\Event $event;
 	 * @return void
 	 */
-	protected function _afterDeleteFile(Event $event) {
+	protected function _afterDeleteFile(EventInterface $event) {
 		$this->_handleLegacyEvent($event);
 		$afterDeleteEvent = new Event('FileStorage.afterDeleteFile', $this, [
 			'entity' => $event->data['entity'],

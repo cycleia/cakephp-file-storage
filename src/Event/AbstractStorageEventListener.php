@@ -3,7 +3,7 @@ namespace Burzum\FileStorage\Event;
 
 use Cake\Core\InstanceConfigTrait;
 use Cake\Datasource\EntityInterface;
-use Cake\Event\Event;
+use Cake\Event\EventInterface;
 use Cake\Event\EventListenerInterface;
 use Cake\Log\LogTrait;
 use Cake\ORM\Table;
@@ -156,7 +156,7 @@ abstract class AbstractStorageEventListener implements EventListenerInterface {
 	 * @param Event $event
 	 * @return boolean
 	 */
-	protected function _checkEvent(Event $event) {
+	protected function _checkEvent(EventInterface $event) {
 		if (!in_array($this->storageTableClass, array('\Burzum\FileStorage\Model\Table\FileStorageTable', '\Burzum\FileStorage\Model\Table\ImageStorageTable'))) {
 			throw new \InvalidArgumentException(sprintf('Invalid storage table `%s`! Table must be FileStorage or ImageStorage or extend one of both!', $this->storageTableClass));
 		}
@@ -173,7 +173,7 @@ abstract class AbstractStorageEventListener implements EventListenerInterface {
 	 * @param Event $event
 	 * @return boolean
 	 */
-	protected function _modelFilter(Event $event) {
+	protected function _modelFilter(EventInterface $event) {
 		if (is_array($this->_config['models'])) {
 			$model = $event->getData()['record']['model'];
 			if (!in_array($model, $this->_config['models'])) {
@@ -189,7 +189,7 @@ abstract class AbstractStorageEventListener implements EventListenerInterface {
 	 * @param Event $event
 	 * @return boolean
 	 */
-	protected function _checkTable(Event $event) {
+	protected function _checkTable(EventInterface $event) {
 		return ($event->getSubject() instanceOf $this->storageTableClass);
 	}
 

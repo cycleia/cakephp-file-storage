@@ -4,7 +4,7 @@ namespace Burzum\FileStorage\Storage;
 use Cake\Core\Configure;
 use Cake\Datasource\EntityInterface;
 use Cake\Event\EventManager;
-use Cake\Event\Event;
+use Cake\Event\EventInterface;
 
 trait ImageVersionsTrait {
 

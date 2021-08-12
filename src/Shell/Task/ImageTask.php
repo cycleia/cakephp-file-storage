@@ -27,7 +27,7 @@ class ImageTask extends Shell {
 	use StorageTrait;
 	use EventManagerTrait;
 
-	public function initialize() {
+	public function initialize(): void {
 		$this->Table = TableRegistry::get('Burzum/FileStorage.ImageStorage');
 	}
 

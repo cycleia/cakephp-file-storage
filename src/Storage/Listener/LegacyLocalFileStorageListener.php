@@ -7,7 +7,7 @@
 namespace Burzum\FileStorage\Storage\Listener;
 
 use Cake\Datasource\EntityInterface;
-use Cake\Event\Event;
+use Cake\Event\EventInterface;
 
 /**
  * Local FileStorage Event Listener for the CakePHP FileStorage plugin

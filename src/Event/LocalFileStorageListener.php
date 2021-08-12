@@ -1,7 +1,7 @@
 <?php
 namespace Burzum\FileStorage\Event;
 
-use Cake\Event\Event;
+use Cake\Event\EventInterface;
 use Cake\Filesystem\Folder;
 use Cake\ORM\Entity;
 use Cake\ORM\Table;
@@ -56,7 +56,7 @@ class LocalFileStorageListener extends AbstractStorageEventListener {
 	 * @param Event $event
 	 * @return boolean|null
 	 */
-	public function afterDelete(Event $event) {
+	public function afterDelete(EventInterface $event) {
 		if ($this->_checkEvent($event)) {
 			$entity = $event->data['record'];
 			$storageConfig = StorageManager::config($entity['adapter']);
@@ -93,7 +93,7 @@ class LocalFileStorageListener extends AbstractStorageEventListener {
 	 * @param Event $event
 	 * @return void
 	 */
-	public function afterSave(Event $event) {
+	public function afterSave(EventInterface $event) {
 		if ($this->_checkEvent($event) && $event->data['record']->isNew()) {
 			$table = $event->subject();
 			$entity = $event->data['record'];

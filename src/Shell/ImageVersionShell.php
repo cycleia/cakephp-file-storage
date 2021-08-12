@@ -3,7 +3,7 @@ namespace Burzum\FileStorage\Shell;
 
 use Cake\Core\Configure;
 use Cake\Console\Shell;
-use Cake\Event\Event;
+use Cake\Event\EventInterface;
 use Cake\Event\EventManager;
 use Cake\ORM\TableRegistry;
 use Burzum\FileStorage\Storage\StorageManager;

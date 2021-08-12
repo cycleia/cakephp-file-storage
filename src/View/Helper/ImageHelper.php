@@ -1,7 +1,7 @@
 <?php
 namespace Burzum\FileStorage\View\Helper;
 
-use Cake\Event\Event;
+use Cake\Event\EventInterface;
 use Cake\Event\EventManager;
 use Cake\Core\Configure;
 use InvalidArgumentException;

@@ -7,7 +7,7 @@
 namespace Burzum\FileStorage\Storage\Listener;
 
 use Cake\Datasource\EntityInterface;
-use Cake\Event\Event;
+use Cake\Event\EventInterface;
 use InvalidArgumentException;
 
 /**
@@ -118,7 +118,7 @@ class BaseListener extends AbstractListener {
 	 * @throws \InvalidArgumentException
 	 * @return void
 	 */
-	public function imagePath(Event $event) {
+	public function imagePath(EventInterface $event) {
 		$data = $event->getData();
 
 		$data = $data + [
@@ -155,7 +155,7 @@ class BaseListener extends AbstractListener {
 	 * @param \Cake\Event\Event $event
 	 * @return void
 	 */
-	public function removeImageVersion(Event $event) {
+	public function removeImageVersion(EventInterface $event) {
 		$this->_processImages($event, 'removeImageVersions');
 	}
 
@@ -165,7 +165,7 @@ class BaseListener extends AbstractListener {
 	 * @param \Cake\Event\Event $event
 	 * @return void
 	 */
-	public function createImageVersion(Event $event) {
+	public function createImageVersion(EventInterface $event) {
 		$this->_processImages($event, 'createImageVersions');
 	}
 
