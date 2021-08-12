@@ -27,6 +27,6 @@ class ImageStorage extends FileStorage {
 			throw new \InvalidArgumentException(sprintf('No valid version key (Identifier: `%s` Key: `%s`) passed!', $this->get('model'), $version));
 		}
 		$event = $this->dispatchEvent('ImageVersion.getVersions', $options);
-		return $event->result;
+		return $event->getResult();
 	}
 }

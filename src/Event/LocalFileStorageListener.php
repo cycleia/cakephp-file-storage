@@ -65,11 +65,11 @@ class LocalFileStorageListener extends AbstractStorageEventListener {
 				$Folder = new Folder($path);
 				$Folder->delete();
 				$event->stopPropagation();
-				$event->result = true;
+				$event->setResult(true);
 				return true;
 			}
 			$event->stopPropagation();
-			$event->result = false;
+			$event->setResult(false);
 			return false;
 		}
 	}

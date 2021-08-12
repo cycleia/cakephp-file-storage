@@ -54,11 +54,11 @@ class S3StorageListener extends AbstractStorageEventListener {
 			} catch (\Exception $e) {
 				$this->log($e->getMessage());
 				$Event->stopPropagation();
-				$Event->result = false;
+				$Event->setResult(false);
 				return false;
 			}
 			$Event->stopPropagation();
-			$Event->result = true;
+			$Event->setResult(true);
 			return true;
 		}
 	}

@@ -197,7 +197,7 @@ class FileStorageTable extends Table {
 			'storage' => $this->storageAdapter($entity['adapter'])
 		]);
 		if ($event->isStopped()) {
-			return $event->result;
+			return $event->getResult();
 		}
 		try {
 			$Storage = $this->storageAdapter($entity['adapter']);

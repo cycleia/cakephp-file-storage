@@ -220,14 +220,14 @@ class ImageProcessingListener extends AbstractStorageEventListener {
 				$Storage = StorageManager::adapter($record['adapter']);
 				if (!$Storage->has($string)) {
 					$Event->stopPropagation();
-					$Event->result = false;
+					$Event->setResult(false);
 					return false;
 				}
 				$Storage->delete($string);
 			} catch (\Exception $e) {
 				$this->log($e->getMessage());
 				$Event->stopPropagation();
-				$Event->result = false;
+				$Event->setResult(false);
 				return false;
 			}
 
@@ -238,7 +238,7 @@ class ImageProcessingListener extends AbstractStorageEventListener {
 			}
 
 			$Event->stopPropagation();
-			$Event->result = true;
+			$Event->setResult(true);
 
 			return true;
 		}
@@ -345,7 +345,7 @@ class ImageProcessingListener extends AbstractStorageEventListener {
 		$data = $Event->getData();
 		extract($data);
 		$path = $this->_buildPath($image, true, $hash);
-		$data['path'] = $Event->result = '/' . $path;
+		$data['path'] = $Event->setResult('/' . $path);
 		$Event->setData($data);
 		$Event->stopPropagation();
 	}
@@ -390,7 +390,8 @@ class ImageProcessingListener extends AbstractStorageEventListener {
 		$path = str_replace('\\', '/', $path);
 		$bucketPrefix = !empty($data['options']['bucketPrefix']) && $data['options']['bucketPrefix'] === true;
 
-		$data['path'] = $Event->result = $this->_buildCloudFrontDistributionUrl($http, $path, $bucket, $bucketPrefix, $cfDist);
+		$data['path'] = $this->_buildCloudFrontDistributionUrl($http, $path, $bucket, $bucketPrefix, $cfDist);
+		$Event->setResult($data['path']);
 
 		$Event->setData($data);
 		$Event->stopPropagation();

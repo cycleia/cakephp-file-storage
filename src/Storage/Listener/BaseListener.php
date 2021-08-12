@@ -79,7 +79,7 @@ class BaseListener extends AbstractListener {
 	 */
 	public function afterDelete(EventInterface $event, EntityInterface $entity) {
 		if ($this->_checkEvent($event)) {
-			$event->result = $this->_deleteFile($event);;
+			$event->setResult($this->_deleteFile($event));
 			$event->stopPropagation();
 		}
 	}
@@ -106,7 +106,7 @@ class BaseListener extends AbstractListener {
 				$this->autoProcessImageVersions($entity, 'create');
 			}
 
-			$event->result = true;
+			$event->setResult(true);
 			$event->stopPropagation();
 		}
 	}

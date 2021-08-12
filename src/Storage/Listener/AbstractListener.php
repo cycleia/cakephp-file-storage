@@ -311,9 +311,9 @@ abstract class AbstractListener implements EventListenerInterface {
 			$entity = $event->data['entity'];
 			$Storage = $this->storageAdapter($entity['adapter']);
 			$Storage->write($entity['path'], file_get_contents($entity[$fileField]['tmp_name']), true);
-			$event->result = $event->data['table']->save($entity, array(
+			$event->setResult($event->data['table']->save($entity, array(
 				'checkRules' => false
-			));
+			)));
 			$this->_afterStoreFile($event);
 			return true;
 		} catch (\Exception $e) {
@@ -372,8 +372,8 @@ abstract class AbstractListener implements EventListenerInterface {
 	protected function _afterStoreFile(EventInterface $event) {
 		$this->_handleLegacyEvent($event);
 		$afterStoreEvent = new Event('FileStorage.afterStoreFile', $this, [
-			'entity' => $event->result,
-			'adapter' => $this->storageAdapter($event->result['adapter'])
+			'entity' => $event->getResult(),
+			'adapter' => $this->storageAdapter($event->getResult()['adapter'])
 		]);
 		EventManager::instance()->dispatch($afterStoreEvent);
 	}
