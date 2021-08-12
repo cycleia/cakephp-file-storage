@@ -5,6 +5,7 @@ use Cake\Event\EventInterface;
 use Cake\Event\EventManager;
 use Cake\Core\Configure;
 use InvalidArgumentException;
+use Cake\Event\Event;
 
 /**
  * ImageHelper
