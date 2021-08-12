@@ -238,7 +238,7 @@ class FileStorageTable extends Table {
 	/**
 	 * @inheritDoc
 	 */
-	public function dispatchEvent(string $name, ?array $data = null, ?object $subject = null): EventInterface;
+	public function dispatchEvent(string $name, ?array $data = null, ?object $subject = null): EventInterface {
 		$data['table'] = $this;
 		return parent::dispatchEvent($name, $data, $subject);
 	}
