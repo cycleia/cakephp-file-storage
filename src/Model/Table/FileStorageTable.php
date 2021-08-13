@@ -79,21 +79,14 @@ class FileStorageTable extends Table {
 	 * @return void
 	 */
 	public function beforeMarshal(EventInterface $event, ArrayAccess $data) {		
-		$copy = $data;
-		// Someties the data array does not have the parent element 'file'
-		// So we deal with that situation here.
-		if(isset($data['file'])) {
-			$copy = $data['file'];
-		}
-
-		if (!empty($copy['tmp_name'])) {
-			$File = new File($copy['tmp_name']);
+		if (!empty($data['file']['tmp_name'])) {
+			$File = new File($data['file']['tmp_name']);
 			$data['filesize'] = $File->size();
 			$data['mime_type'] = $File->mime();
 		}
-		if (!empty($copy['name'])) {
-			$data['extension'] = pathinfo($copy['name'], PATHINFO_EXTENSION);
-			$data['filename'] = $copy['name'];
+		if (!empty($data['file']['name'])) {
+			$data['extension'] = pathinfo($data['file']['name'], PATHINFO_EXTENSION);
+			$data['filename'] = $data['file']['name'];
 		}
 	}
 
