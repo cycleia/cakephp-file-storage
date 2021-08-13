@@ -44,8 +44,8 @@ class LegacyLocalFileStorageListener extends LocalListener {
 		if ($this->_checkEvent($event) && $entity->isNew()) {
 			$fileField = $this->config('fileField');
 
-			$entity['hash'] = $this->getFileHash($entity, $fileField);
-			$entity['path'] = $this->pathBuilder()->path($entity);
+			$entity->hash = $this->getFileHash($entity, $fileField);
+			$entity->path = $this->pathBuilder()->path($entity);
 
 			if (!$this->_storeFile($event)) {
 				return;

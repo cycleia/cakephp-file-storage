@@ -58,9 +58,9 @@ class LocalFileStorageListener extends AbstractStorageEventListener {
 	 */
 	public function afterDelete(EventInterface $event) {
 		if ($this->_checkEvent($event)) {
-			$entity = $event->data['record'];
-			$storageConfig = StorageManager::config($entity['adapter']);
-			$path = $storageConfig['adapterOptions'][0] . $event->data['record']['path'];
+			$entity = $event->getData('record');
+			$storageConfig = StorageManager::config($entity->adapter);
+			$path = $storageConfig['adapterOptions'][0] . $entity->path;
 			if (is_dir($path)) {
 				$Folder = new Folder($path);
 				$Folder->delete();
@@ -94,19 +94,20 @@ class LocalFileStorageListener extends AbstractStorageEventListener {
 	 * @return void
 	 */
 	public function afterSave(EventInterface $event) {
-		if ($this->_checkEvent($event) && $event->data['record']->isNew()) {
-			$table = $event->subject();
-			$entity = $event->data['record'];
-			$Storage = StorageManager::adapter($entity['adapter']);
+		if ($this->_checkEvent($event) && $event->getData('record')->isNew()) {
+			$table = $event->getSubject();
+			$entity = $event->getData('record');
+
+			$Storage = StorageManager::adapter($entity->adapter);
 			try {
 				$filename = $this->buildFileName($table, $entity);
 				$entity->path = $this->buildPath($table, $entity);
 
-				$Storage->write($entity['path'] . $filename, file_get_contents($entity['file']['tmp_name']), true);
-				$table->save($entity, array(
+				$Storage->write($entity->path . $filename, file_get_contents($entity->file['tmp_name']), true);
+				$table->save($entity, [
 					'validate' => false,
 					'callbacks' => false
-				));
+				]);
 			} catch (\Exception $e) {
 				$this->log($e->getMessage());
 			}

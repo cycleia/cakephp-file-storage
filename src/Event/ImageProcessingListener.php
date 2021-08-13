@@ -121,7 +121,7 @@ class ImageProcessingListener extends AbstractStorageEventListener {
 	 * @return false|null
 	 */
 	protected function _createVersions(Table $table, $entity, array $operations) {
-		$Storage = StorageManager::getAdapter($entity['adapter']);
+		$Storage = StorageManager::getAdapter($entity->adapter);
 		$path = $this->_buildPath($entity, true);
 		$tmpFile = $this->_tmpFile($Storage, $path, TMP . 'image-processing');
 
@@ -138,8 +138,8 @@ class ImageProcessingListener extends AbstractStorageEventListener {
 			}
 
 			try {
-				$image = $table->processImage($tmpFile, null, array('format' => $entity['extension']), $imageOperations);
-				$Storage->write($string, $image->get($entity['extension']), true);
+				$image = $table->processImage($tmpFile, null, array('format' => $entity->extension), $imageOperations);
+				$Storage->write($string, $image->get($entity->extension), true);
 			} catch (\Exception $e) {
 				$this->log($e->getMessage());
 				unlink($tmpFile);
@@ -158,7 +158,7 @@ class ImageProcessingListener extends AbstractStorageEventListener {
 	 */
 	public function createVersions(EventInterface $Event) {
 		if ($this->_checkEvent($Event)) {
-			$table = $Event->subject();
+			$table = $Event->getSubject();
 			$record = $Event->getData('record');
 			$this->_createVersions($table, $record, $Event->getData('operations'));
 			$Event->stopPropagation();
@@ -217,7 +217,7 @@ class ImageProcessingListener extends AbstractStorageEventListener {
 			}
 
 			try {
-				$Storage = StorageManager::adapter($record['adapter']);
+				$Storage = StorageManager::adapter($record->adapter);
 				if (!$Storage->has($string)) {
 					$Event->stopPropagation();
 					$Event->setResult(false);
@@ -231,7 +231,7 @@ class ImageProcessingListener extends AbstractStorageEventListener {
 				return false;
 			}
 
-			$operations = Configure::read('FileStorage.imageSizes.' . $record['model']);
+			$operations = Configure::read('FileStorage.imageSizes.' . $record->model);
 			if (!empty($operations)) {
 				$Event->setData('operations', $operations);
 				$this->_removeVersions($Event);
@@ -253,12 +253,12 @@ class ImageProcessingListener extends AbstractStorageEventListener {
 	public function beforeSave(EventInterface $Event) {
 		if ($this->_checkEvent($Event)) {
 			$record = $Event->getData('record');
-			if (empty($record['model'])) {
+			if (empty($record->model)) {
 				return;
 			}
-			if (in_array($record['model'], (array)$this->getConfig('autoRotate'))) {
-				$imageFile = $record['file']['tmp_name'];
-				$format = StorageUtils::fileExtension($record['file']['name']);
+			if (in_array($record->model, (array)$this->getConfig('autoRotate'))) {
+				$imageFile = $record->file['tmp_name'];
+				$format = StorageUtils::fileExtension($record->name);
 				$this->_autoRotate($imageFile, $format);
 			}
 		}
@@ -274,21 +274,21 @@ class ImageProcessingListener extends AbstractStorageEventListener {
 		if ($this->_checkEvent($Event)) {
 			$table = $Event->getSubject();
 			$record = $Event->getData('record');
-			$Storage = StorageManager::getAdapter($record->get('adapter'));
+			$Storage = StorageManager::getAdapter($record->adapter);
 			try {
 				$id = $record->{$table->getPrimaryKey()};
 				$filename = $this->stripDashes($id);
-				$file = $record['file'];
-				$record['path'] = $this->fsPath('images' . DS . $record['model'], $id);
+				$file = $record->file;
+				$record->path = $this->fsPath('images' . DS . $record->model, $id);
 				if ($this->_config['preserveFilename'] === true) {
-					$path = $record['path'] . $record['filename'];
+					$path = $record->path . $record->filename;
 				} else {
-					$path = $record['path'] . $filename . '.' . $record['extension'];
+					$path = $record->path . $filename . '.' . $record->extension;
 				}
 
 				if ($this->adapterClass === 'AmazonS3' || $this->adapterClass === 'AwsS3') {
 					$path = str_replace('\\', '/', $path);
-					$record['path'] = str_replace('\\', '/', $record['path']);
+					$record->path = str_replace('\\', '/', $record->path);
 				}
 
 				$Storage->write($path, file_get_contents($file['tmp_name']), true);
@@ -298,7 +298,7 @@ class ImageProcessingListener extends AbstractStorageEventListener {
 					'callbacks' => false
 				));
 
-				$operations = Configure::read('FileStorage.imageSizes.' . $record['model']);
+				$operations = Configure::read('FileStorage.imageSizes.' . $record->model);
 				if (!empty($operations)) {
 					$this->_createVersions($table, $record, $operations);
 				}
@@ -435,17 +435,17 @@ class ImageProcessingListener extends AbstractStorageEventListener {
 	protected function _buildPath($record, $extension = true, $hash = null) {
 		if ($this->_config['preserveFilename'] === true) {
 			if (!empty($hash)) {
-				$path = $record['path'] . preg_replace('/\.[^.]*$/', '', $record['filename']) . '.' . $hash . '.' . $record['extension'];
+				$path = $record->path . preg_replace('/\.[^.]*$/', '', $record->filename) . '.' . $hash . '.' . $record->extension;
 			} else {
-				$path = $record['path'] . $record['filename'];
+				$path = $record->path . $record->filename;
 			}
 		} else {
-			$path = $record['path'] . str_replace('-', '', $record['id']);
+			$path = $record->path . str_replace('-', '', $record->id);
 			if (!empty($hash)) {
 				$path .= '.' . $hash;
 			}
 			if ($extension === true) {
-				$path .= '.' . $record['extension'];
+				$path .= '.' . $record->extension;
 			}
 		}
 

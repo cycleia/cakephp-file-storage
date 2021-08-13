@@ -137,15 +137,15 @@ abstract class AbstractListener implements EventListenerInterface {
 	 * @throws \Burzum\FileStorage\Storage\StorageException
 	 */
 	protected function _checkEvent(EventInterface $event) {
-		$className = $this->_getAdapterClassFromConfig($event->data['record']['adapter']);
+		$className = $this->_getAdapterClassFromConfig($event->getData('record')->adapter);
 		$classes = $this->_adapterClasses;
 		if (!empty($classes) && !in_array($className, $this->_adapterClasses)) {
 			$message = 'The listener `%s` doesn\'t allow the `%s` adapter class! Probably because it can\'t work with it.';
 			throw new StorageException(sprintf($message, get_class($this), $className));
 		}
 		return (
-			isset($event->data['table'])
-			&& $event->data['table'] instanceof Table
+			isset($event->getData('table'))
+			&& $event->getData('table') instanceof Table
 			&& $this->_modelFilter($event)
 		);
 	}
@@ -158,7 +158,7 @@ abstract class AbstractListener implements EventListenerInterface {
 	 */
 	protected function _modelFilter(EventInterface $event) {
 		if (is_array($this->_config['models'])) {
-			$model = $event->data['record']['model'];
+			$model = $event->getData('record')->model;
 			if (!in_array($model, $this->_config['models'])) {
 				return false;
 			}
@@ -294,7 +294,7 @@ abstract class AbstractListener implements EventListenerInterface {
 	 * @return string
 	 */
 	public function getPath(EventInterface $event) {
-		return $this->pathBuilder()->{$event->data['method']}($event->subject(), $event->data);
+		return $this->pathBuilder()->{$event->getData('method')}($event->getSubject(), $event->getData());
 	}
 
 	/**
@@ -308,12 +308,12 @@ abstract class AbstractListener implements EventListenerInterface {
 		try {
 			$this->_handleLegacyEvent($event);
 			$fileField = $this->config('fileField');
-			$entity = $event->data['entity'];
-			$Storage = $this->storageAdapter($entity['adapter']);
-			$Storage->write($entity['path'], file_get_contents($entity[$fileField]['tmp_name']), true);
-			$event->setResult($event->data['table']->save($entity, array(
+			$entity = $event->getData('entity');
+			$Storage = $this->storageAdapter($entity->adapter);
+			$Storage->write($entity->path, file_get_contents($entity->{$fileField}['tmp_name']), true);
+			$event->setResult($event->getData('table')->save($entity, [
 				'checkRules' => false
-			)));
+			]));
 			$this->_afterStoreFile($event);
 			return true;
 		} catch (\Exception $e) {
@@ -334,7 +334,7 @@ abstract class AbstractListener implements EventListenerInterface {
 	protected function _deleteFile(EventInterface $event) {
 		try {
 			$this->_handleLegacyEvent($event);
-			$entity = $event->data['entity'];
+			$entity = $event->getData('entity');
 			$path = $this->pathBuilder()->fullPath($entity);
 			if ($this->storageAdapter($entity->adapter)->delete($path)) {
 				if ($this->_config['imageProcessing'] === true) {
@@ -373,7 +373,7 @@ abstract class AbstractListener implements EventListenerInterface {
 		$this->_handleLegacyEvent($event);
 		$afterStoreEvent = new Event('FileStorage.afterStoreFile', $this, [
 			'entity' => $event->getResult(),
-			'adapter' => $this->storageAdapter($event->getResult()['adapter'])
+			'adapter' => $this->storageAdapter($event->getResult()->adapter)
 		]);
 		EventManager::instance()->dispatch($afterStoreEvent);
 	}
@@ -388,8 +388,8 @@ abstract class AbstractListener implements EventListenerInterface {
 	protected function _afterDeleteFile(EventInterface $event) {
 		$this->_handleLegacyEvent($event);
 		$afterDeleteEvent = new Event('FileStorage.afterDeleteFile', $this, [
-			'entity' => $event->data['entity'],
-			'adapter' => $this->storageAdapter($event->data['entity']->adapter)
+			'entity' => $event->getData('entity'),
+			'adapter' => $this->storageAdapter($event->getData('entity')->adapter)
 		]);
 		EventManager::instance()->dispatch($afterDeleteEvent);
 	}
@@ -412,8 +412,8 @@ abstract class AbstractListener implements EventListenerInterface {
 			return;
 		}
 
-		if ($event->data['record']) {
-			$event->data['entity'] = $event->data['record'];
+		if ($event->getData('record')) {
+			$event->setData('entity', $event->getData('record'));
 		}
 	}
 }

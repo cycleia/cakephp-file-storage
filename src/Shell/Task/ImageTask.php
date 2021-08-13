@@ -120,7 +120,7 @@ class ImageTask extends Shell {
 	public function _getRecords($identifier, $limit, $offset) {
 		return $this->Table
 			->find()
-			->where([$this->Table->alias() . '.model' => $identifier])
+			->where([$this->Table->getAlias() . '.model' => $identifier])
 			->limit($limit)
 			->offset($offset)
 			->all();
@@ -150,7 +150,7 @@ class ImageTask extends Shell {
 	protected function _getCountQuery($identifier) {
 		return $this->Table
 			->find()
-			->where([$this->Table->alias() . '.model' => $identifier]);
+			->where([$this->Table->getAlias() . '.model' => $identifier]);
 	}
 
 	public function getOptionParser() {

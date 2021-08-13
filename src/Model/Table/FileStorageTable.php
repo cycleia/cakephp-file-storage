@@ -78,8 +78,23 @@ class FileStorageTable extends Table {
 	 * @param \ArrayAccess $data
 	 * @return void
 	 */
-	public function beforeMarshal(EventInterface $event, ArrayAccess $data) {
-		$this->getFileInfoFromUpload($data);
+	public function beforeMarshal(EventInterface $event, ArrayAccess $data) {		
+		$copy = $data;
+		// Someties the data array does not have the parent element 'file'
+		// So we deal with that situation here.
+		if(isset($data['file'])) {
+			$copy = $data['file'];
+		}
+
+		if (!empty($copy['tmp_name'])) {
+			$File = new File($copy['tmp_name']);
+			$data['filesize'] = $File->size();
+			$data['mime_type'] = $File->mime();
+		}
+		if (!empty($copy['name'])) {
+			$data['extension'] = pathinfo($copy['name'], PATHINFO_EXTENSION);
+			$data['filename'] = $copy['name'];
+		}
 	}
 
 	/**
@@ -111,35 +126,11 @@ class FileStorageTable extends Table {
 	protected function _checkEntityBeforeSave(EntityInterface &$entity) {
 		if ($entity->isNew()) {
 			if (empty($entity->model)) {
-				$entity->model = $this->table();
+				$entity->model = $this->getAlias();
 			}
 			if (empty($entity->adapter)) {
 				$entity->adapter = $this->_defaultAdapter;
 			}
-		}
-	}
-
-	/**
-	 * Gets information about the file that is being uploaded.
-	 * - gets the file size
-	 * - gets the mime type
-	 * - gets the extension if present
-	 * - sets the adapter by default to local if not already set
-	 * - sets the model field to the table name if not already set
-	 *
-	 * @param array|\ArrayAccess $upload
-	 * @param string $field
-	 * @return void
-	 */
-	public function getFileInfoFromUpload(&$upload, $field = 'file') {
-		if (!empty($upload[$field]['tmp_name'])) {
-			$File = new File($upload[$field]['tmp_name']);
-			$upload['filesize'] = $File->size();
-			$upload['mime_type'] = $File->mime();
-		}
-		if (!empty($upload[$field]['name'])) {
-			$upload['extension'] = pathinfo($upload[$field]['name'], PATHINFO_EXTENSION);
-			$upload['filename'] = $upload[$field]['name'];
 		}
 	}
 
@@ -154,8 +145,9 @@ class FileStorageTable extends Table {
 	public function afterSave(EventInterface $event, EntityInterface $entity, $options) {
 		$this->dispatchEvent('FileStorage.afterSave', [
 			'record' => $entity,
-			'created' => $event->data['entity']->isNew(),
-			'storage' => $this->storageAdapter($entity['adapter'])
+			// 'created' => $entity->isNew(),
+			'created' => $event->getData('entity')->isNew(),
+			'storage' => $this->storageAdapter($entity->adapter)
 		]);
 		$this->deleteOldFileOnSave($entity);
 		return true;
@@ -172,7 +164,7 @@ class FileStorageTable extends Table {
 		$this->record = $this->find()
 			->contain([])
 			->where([
-				$this->alias() . '.' . $this->primaryKey() => $entity->{$this->primaryKey()}
+				$this->getAlias() . '.' . $this->getPrimaryKey() => $entity->{$this->getPrimaryKey()}
 			])
 			->first();
 
@@ -194,14 +186,14 @@ class FileStorageTable extends Table {
 	public function afterDelete(EventInterface $event, EntityInterface $entity, $options) {
 		$event = $this->dispatchEvent('FileStorage.afterDelete', [
 			'record' => $entity,
-			'storage' => $this->storageAdapter($entity['adapter'])
+			'storage' => $this->storageAdapter($entity->adapter)
 		]);
 		if ($event->isStopped()) {
 			return $event->getResult();
 		}
 		try {
-			$Storage = $this->storageAdapter($entity['adapter']);
-			$Storage->delete($entity['path']);
+			$Storage = $this->storageAdapter($entity->adapter);
+			$Storage->delete($entity->path);
 			return true;
 		} catch (\Exception $e) {
 			$this->log($e->getMessage());
@@ -220,11 +212,11 @@ class FileStorageTable extends Table {
 	 * @return boolean Returns true if the old record was deleted
 	 */
 	public function deleteOldFileOnSave(EntityInterface $entity, $oldIdField = 'old_file_id') {
-		if (!empty($entity[$oldIdField]) && $entity['model']) {
+		if (!empty($entity->{$oldIdField}) && $entity->model) {
 			$oldEntity = $this->find()
 				->contain([])
 				->where([
-					$this->alias() . '.' . $this->primaryKey() => $entity[$oldIdField], 'model' => $entity['model']
+					$this->getAlias() . '.' . $this->getPrimaryKey() => $entity->{$oldIdField}, 'model' => $entity->model
 				])
 				->first();
 

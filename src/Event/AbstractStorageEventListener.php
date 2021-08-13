@@ -115,14 +115,14 @@ abstract class AbstractStorageEventListener implements EventListenerInterface {
 	 */
 	public function buildFilename($table, $entity) {
 		if ($this->_config['preserveFilename'] === true) {
-			return $entity['filename'];
+			return $entity->filename;
 		}
-		$filename = $entity['id'];
+		$filename = $entity->id;
 		if ($this->_config['stripUuid'] === true) {
 			$filename = $this->stripDashes($filename);
 		}
 		if ($this->_config['preserveExtension'] === true) {
-			$filename = $filename . '.' . $entity['extension'];
+			$filename = $filename . '.' . $entity->extension;
 		}
 		return $filename;
 	}
@@ -137,13 +137,13 @@ abstract class AbstractStorageEventListener implements EventListenerInterface {
 	public function buildPath($table, $entity) {
 		$path = '';
 		if ($this->_config['tableFolder']) {
-			$path .= $table->table() . DS;
+			$path .= $table->getAlias() . DS;
 		}
 		if ($this->_config['randomPath'] === true) {
-			$path .= StorageUtils::randomPath($entity[$table->primaryKey()]);
+			$path .= StorageUtils::randomPath($entity->{$table->getPrimaryKey()});
 		}
 		if ($this->_config['uuidFolder'] === true) {
-			$path .= $this->stripDashes($entity[$table->primaryKey()]) . DS;
+			$path .= $this->stripDashes($entity->{$table->getPrimaryKey()}) . DS;
 		}
 		return $path;
 	}
@@ -175,7 +175,7 @@ abstract class AbstractStorageEventListener implements EventListenerInterface {
 	 */
 	protected function _modelFilter(EventInterface $event) {
 		if (is_array($this->_config['models'])) {
-			$model = $event->getData()['record']['model'];
+			$model = $event->getData('record')->model;
 			if (!in_array($model, $this->_config['models'])) {
 				return false;
 			}

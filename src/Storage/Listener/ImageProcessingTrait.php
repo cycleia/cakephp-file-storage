@@ -120,22 +120,22 @@ trait ImageProcessingTrait {
 	 * @return array
 	 */
 	public function createImageVersions(EntityInterface $entity, array $versions, array $options = []) {
-		$this->_checkImageVersions($entity->get('model'), $versions);
+		$this->_checkImageVersions($entity->model, $versions);
 
 		$options += $this->_defaultOutput + [
 			'overwrite' => true
 		];
 
 		$result = [];
-		$storage = $this->storageAdapter($entity->get('adapter'));
+		$storage = $this->storageAdapter($entity->adapter);
 
-		foreach ($this->_imageVersions[$entity->get('model')] as $version => $operations) {
+		foreach ($this->_imageVersions[$entity->model] as $version => $operations) {
 			if (!in_array($version, $versions)) {
 				if ($this instanceof Shell) {
 					$this->warn(sprintf(
 						'Version `%s` for identifier `%s` not found',
 						$version,
-						$entity->get('model')
+						$entity->model
 					));
 				}
 				continue;

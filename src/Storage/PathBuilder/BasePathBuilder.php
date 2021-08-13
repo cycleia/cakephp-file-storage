@@ -219,7 +219,7 @@ class BasePathBuilder implements PathBuilderInterface {
 			$filename = $filename . $options['fileSuffix'];
 		}
 		if ($options['preserveExtension'] === true) {
-			$filename = $filename . '.' . $entity['extension'];
+			$filename = $filename . '.' . $entity->extension;
 		}
 		if (!empty($options['filePrefix'])) {
 			$filename = $options['filePrefix'] . $filename;
@@ -237,9 +237,9 @@ class BasePathBuilder implements PathBuilderInterface {
 	 * @return string
 	 */
 	protected function _preserveFilename(EntityInterface $entity, array $options = []) {
-		$filename = $entity['filename'];
+		$filename = $entity->filename;
 		if (!empty($options['filePrefix'])) {
-			$filename = $options['filePrefix'] . $entity['filename'];
+			$filename = $options['filePrefix'] . $entity->filename;
 		}
 		if (!empty($options['fileSuffix'])) {
 			$split = $this->splitFilename($filename, true);

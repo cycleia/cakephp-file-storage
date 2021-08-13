@@ -42,11 +42,11 @@ class S3StorageListener extends AbstractStorageEventListener {
  */
 	public function afterDelete(EventInterface $Event) {
 		if ($this->_checkEvent($Event)) {
-			$table = $Event->subject();
-			$record = $Event->data['record'][$table->alias()];
+			$table = $Event->getSubject();
+			$record = $Event->getData('record')->{$table->getAlias()};
 			$path = $this->_buildPath($Event);
 			try {
-				$Storage = $this->getAdapter($record['adapter']);
+				$Storage = $this->getAdapter($record->adapter);
 				if (!$Storage->has($path['combined'])) {
 					return false;
 				}
@@ -71,14 +71,14 @@ class S3StorageListener extends AbstractStorageEventListener {
  */
 	public function afterSave(EventInterface $Event) {
 		if ($this->_checkEvent($Event)) {
-			$table = $Event->subject();
-			$record = $Event->data['record'];
-			$Storage = $this->getAdapter($record['adapter']);
+			$table = $Event->getSubject();
+			$record = $Event->getData('record');
+			$Storage = $this->getAdapter($record->adapter);
 
 			try {
-				$path = $this->buildPath($Event->subject(), $Event->data['record']);
-				$record['path'] = $path['path'];
-				$Storage->write($path['combined'], file_get_contents($record['file']['tmp_name']), true);
+				$path = $this->buildPath($Event->getSubject(), $Event->getData('record'));
+				$record->path = $path['path'];
+				$Storage->write($path['combined'], file_get_contents($record->file['tmp_name']), true);
 				$table->save($record, array(
 					'validate' => false,
 					'callbacks' => false)
@@ -97,19 +97,19 @@ class S3StorageListener extends AbstractStorageEventListener {
  * @return array
  */
 	public function buildPath($table, $entity) {
-		$adapterConfig = $this->getAdapterconfig($entity['adapter']);
-		$id = $entity[$table->primaryKey()];
+		$adapterConfig = $this->getAdapterconfig($entity->adapter);
+		$id = $entity->{$table->getPrimaryKey()};
 
-		$path = $this->fsPath('files' . DS . $entity['model'], $id);
+		$path = $this->fsPath('files' . DS . $entity->model, $id);
 		$path = '/' . str_replace('\\', '/', $path);
 
 		if ($this->_config['preserveFilename'] === false) {
 			$filename = $this->stripDashes($id);
-			if ($this->_config['preserveExtension'] === true && !empty($entity['extension'])) {
-				$filename .= '.' . $entity['extension'];
+			if ($this->_config['preserveExtension'] === true && !empty($entity->extension)) {
+				$filename .= '.' . $entity->extension;
 			}
 		} else {
-			$filename = $entity['filename'];
+			$filename = $entity->filename;
 		}
 
 		$combined = $path . $filename;

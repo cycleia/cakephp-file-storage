@@ -23,7 +23,7 @@ trait ImageVersionsTrait {
 		$versionData = $this->_getImageVersionData($entity, $options);
 		$versions = [];
 		foreach ($versionData as $version => $data) {
-			$hash = Configure::read('FileStorage.imageHashes.' . $entity->get('model') . '.' . $version);
+			$hash = Configure::read('FileStorage.imageHashes.' . $entity->model . '.' . $version);
 			$eventData = [
 				'hash' => $hash,
 				'image' => $entity,
@@ -37,7 +37,7 @@ trait ImageVersionsTrait {
 				EventManager::instance()->dispatch($event);
 			}
 			if ($event->isStopped()) {
-				$versions[$version] = str_replace('\\', '/', $event->data['path']);
+				$versions[$version] = str_replace('\\', '/', $event->getData('path'));
 			}
 		}
 		return $versions;
@@ -51,11 +51,11 @@ trait ImageVersionsTrait {
 	 * @return array Version data information as array.
 	 */
 	protected function _getImageVersionData(EntityInterface $entity, array $options = []) {
-		$versionData = (array)Configure::read('FileStorage.imageSizes.' . $entity->get('model'));
+		$versionData = (array)Configure::read('FileStorage.imageSizes.' . $entity->model);
 		if (isset($options['originalVersion'])) {
 			$versionData['original'] = $options['originalVersion'];
 		} else {
-			Configure::write('FileStorage.imageSizes.' . $entity->get('model') . '.original', []);
+			Configure::write('FileStorage.imageSizes.' . $entity->model . '.original', []);
 			$versionData['original'] = [];
 		}
 		$versionData['original'] = isset($options['originalVersion']) ? $options['originalVersion'] : 'original';
