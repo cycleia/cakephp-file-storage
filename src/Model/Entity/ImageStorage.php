@@ -22,7 +22,7 @@ class ImageStorage extends FileStorage {
 	public function imageVersion($version, $options = []) {
 		$options['version'] = $version;
 		$options['image'] = $this;
-		$options['hash'] = Configure::read('FileStorage.imageHashes.' . $this->_properties['model'] . '.' . $version);
+		$options['hash'] = Configure::read('FileStorage.imageHashes.' . $this->model . '.' . $version);
 		if (empty($options['hash'])) {
 			throw new \InvalidArgumentException(sprintf('No valid version key (Identifier: `%s` Key: `%s`) passed!', $this->get('model'), $version));
 		}
