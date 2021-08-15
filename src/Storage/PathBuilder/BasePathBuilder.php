@@ -69,7 +69,7 @@ class BasePathBuilder implements PathBuilderInterface {
 	 * @return string
 	 */
 	public function path(EntityInterface $entity, array $options = []) {
-		$config = array_merge($this->config(), $options);
+		$config = array_merge($this->getConfig(), $options);
 		$path = '';
 		$path = $this->_pathPrefix($entity, $path, $config);
 		$path = $this->_path($entity, $path, $config);
@@ -190,7 +190,7 @@ class BasePathBuilder implements PathBuilderInterface {
 	 * @return string
 	 */
 	public function filename(EntityInterface $entity, array $options = []) {
-		$config = array_merge($this->config(), $options);
+		$config = array_merge($this->getConfig(), $options);
 		if ($config['preserveFilename'] === true) {
 			return $this->_preserveFilename($entity, $config);
 		}

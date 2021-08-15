@@ -93,7 +93,7 @@ class BaseListener extends AbstractListener {
 	 */
 	public function afterSave(EventInterface $event, EntityInterface $entity) {
 		if ($this->_checkEvent($event) && $entity->isNew()) {
-			$fileField = $this->config('fileField');
+			$fileField = $this->getConfig('fileField');
 
 			$entity['hash'] = $this->getFileHash($entity, $fileField);
 			$entity['path'] = $this->pathBuilder()->fullPath($entity);

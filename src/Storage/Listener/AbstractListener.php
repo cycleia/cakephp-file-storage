@@ -88,7 +88,7 @@ abstract class AbstractListener implements EventListenerInterface {
 	 */
 	public function __construct(array $config = []) {
 		$this->_mergeListenerVars();
-		$this->config($config);
+		$this->setConfig($config);
 		$this->pathBuilder(
 			$this->_config['pathBuilder'],
 			$this->_config['pathBuilderOptions']
@@ -256,10 +256,10 @@ abstract class AbstractListener implements EventListenerInterface {
 	 * @return null|string
 	 */
 	public function getFileHash(EntityInterface $entity, $fileField) {
-		if ($this->config('fileHash') !== false) {
+		if ($this->getConfig('fileHash') !== false) {
 			return $this->calculateFileHash(
 				$entity[$fileField]['tmp_name'],
-				$this->config('fileHash')
+				$this->getConfig('fileHash')
 			);
 		}
 		return null;
@@ -307,7 +307,7 @@ abstract class AbstractListener implements EventListenerInterface {
 	protected function _storeFile(EventInterface $event) {
 		try {
 			$this->_handleLegacyEvent($event);
-			$fileField = $this->config('fileField');
+			$fileField = $this->getConfig('fileField');
 			$entity = $event->getData('entity');
 			$Storage = $this->storageAdapter($entity->adapter);
 			$Storage->write($entity->path, file_get_contents($entity->{$fileField}['tmp_name']), true);

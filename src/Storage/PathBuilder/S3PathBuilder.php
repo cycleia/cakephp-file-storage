@@ -44,7 +44,7 @@ class S3PathBuilder extends BasePathBuilder {
 	 * @return string
 	 */
 	protected function _buildCloudUrl($bucket, $bucketPrefix = null, $cfDist = null) {
-		$path = $this->config('https') === true ? 'https://' : 'http://';
+		$path = $this->getConfig('https') === true ? 'https://' : 'http://';
 		if ($cfDist) {
 			$path .= $cfDist;
 		} else {
