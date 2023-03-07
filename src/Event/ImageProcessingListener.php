@@ -256,7 +256,7 @@ class ImageProcessingListener extends AbstractStorageEventListener {
 			if (empty($record->model)) {
 				return;
 			}
-			if (in_array($record->model, (array)$this->getConfig('autoRotate'))) {
+			if (in_array($record->model, (array)$this->getConfig('autoRotate')) && isset($record->file['tmp_name'])) {
 				$imageFile = $record->file['tmp_name'];
 				$format = StorageUtils::fileExtension($record->name);
 				$this->_autoRotate($imageFile, $format);
