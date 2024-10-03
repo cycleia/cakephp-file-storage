@@ -117,6 +117,10 @@ class FileStorageTable extends Table {
 	 * @return void
 	 */
 	protected function _checkEntityBeforeSave(EntityInterface &$entity) {
+		if(isset($entity->name) && empty($entity->name)) {
+			$entity->name = ''; // Make sure it's not null.
+		}
+
 		if ($entity->isNew()) {
 			if (empty($entity->model)) {
 				$entity->model = $this->getAlias();
