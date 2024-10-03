@@ -28,10 +28,10 @@ trait PathBuilderTrait {
 	 */
 	public function createPathBuilder($name, array $options = []) {
 		$className = App::className($name, 'Storage/PathBuilder', 'PathBuilder');
-		if (!class_exists($className)) {
+		if (!is_string($className) || !class_exists($className)) {
 			$className = App::className('Burzum/FileStorage.' . $name, 'Storage/PathBuilder', 'PathBuilder');
 		}
-		if (!class_exists($className)) {
+		if (!is_string($className) || !class_exists($className)) {
 			throw new RuntimeException(sprintf('Could not find path builder "%s"!', $name));
 		}
 		$pathBuilder = new $className($options);
