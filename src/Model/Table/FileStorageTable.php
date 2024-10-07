@@ -29,7 +29,8 @@ class FileStorageTable extends Table {
 	 * @var string
 	 */
 	public $name = 'FileStorage';
-
+	public $data = null;
+	
 	/**
 	 * The record that was deleted
 	 * This gets set in the beforeDelete() callback so that the data is available
